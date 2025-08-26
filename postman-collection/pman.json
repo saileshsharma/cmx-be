@@ -1,0 +1,95 @@
+{
+  "info": {
+    "name": "Auto Claims GraphQL API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_postman_id": "auto-claims-graphql-collection"
+  },
+  "item": [
+    {
+      "name": "Get All Claims",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"query\": \"query { getAllClaims { claimId claimStatus claimAmount claimDate createdAt vehicle { registrationNo } fnol { fnolId description } surveyor { fullName } } }\" }"
+        },
+        "url": { "raw": "http://localhost:8080/graphql", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["graphql"] }
+      }
+    },
+    {
+      "name": "Get Claim By ID",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"query\": \"query { getClaimById(id: 1) { claimId claimStatus claimAmount claimDate fnol { description accidentDate } vehicle { registrationNo make model } surveyor { fullName status } } }\" }"
+        },
+        "url": { "raw": "http://localhost:8080/graphql", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["graphql"] }
+      }
+    },
+    {
+      "name": "Get Claims By Status",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"query\": \"query { getClaimsByStatus(status: OPEN) { claimId claimStatus claimAmount fnol { fnolId description } } }\" }"
+        },
+        "url": { "raw": "http://localhost:8080/graphql", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["graphql"] }
+      }
+    },
+    {
+      "name": "Get All FNOL",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"query\": \"query { getAllFnol { fnolId description accidentDate policy { policyId policyType } insured { fullName email } vehicle { registrationNo make model } surveyor { fullName status } accidentLocation { city state locationType } } }\" }"
+        },
+        "url": { "raw": "http://localhost:8080/graphql", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["graphql"] }
+      }
+    },
+    {
+      "name": "Get FNOL By ID",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"query\": \"query { getFnolById(fnolId: 1) { fnolId description accidentDate policeReportNo severity policy { policyId } vehicle { registrationNo } insured { fullName } accidentLocation { city state } surveyor { fullName status } } }\" }"
+        },
+        "url": { "raw": "http://localhost:8080/graphql", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["graphql"] }
+      }
+    },
+    {
+      "name": "Update Claim Status",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"query\": \"mutation { updateClaimStatus(claimId: 1, status: APPROVED) { claimId claimStatus claimAmount fnol { fnolId description } } }\" }"
+        },
+        "url": { "raw": "http://localhost:8080/graphql", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["graphql"] }
+      }
+    },
+    {
+      "name": "Create FNOL",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"query\": \"mutation { createFnol(policySeqId: 1, vehicleId: 1, insuredId: 1, locationId: 1, description: \\\"Rear-end collision\\\", policeReportNo: \\\"PR12345\\\", severity: \\\"HIGH\\\", surveyorId: 1) { fnol { fnolId description accidentDate } claim { claimId claimStatus claimAmount } } }\" }"
+        },
+        "url": { "raw": "http://localhost:8080/graphql", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["graphql"] }
+      }
+    }
+  ]
+}
