@@ -1,0 +1,54 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:16
+    container_name: cmx-postgres
+    environment:
+      POSTGRES_DB: cmx
+      POSTGRES_USER: cmx_user
+      POSTGRES_PASSWORD: cmx_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cmx_user -d cmx"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  cmx-be:
+    build: .
+    image: cmx-be:latest
+    container_name: cmx-be
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      # --- Spring profile/port/timezone ---
+      SPRING_PROFILES_ACTIVE: "prod"
+      SERVER_PORT: "8080"
+      TZ: "Asia/Singapore"
+
+      # --- Database ---
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://db:5432/cmx"
+      SPRING_DATASOURCE_USERNAME: "cmx_user"
+      SPRING_DATASOURCE_PASSWORD: "cmx_pass"
+
+      # --- JPA (adjust if you manage schema via Flyway/Liquibase) ---
+      SPRING_JPA_HIBERNATE_DDL_AUTO: "none"
+
+      # --- Kafka (point to external host:port, NOT container) ---
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: "localhost:9092"
+      # 👆 Adjust this to your actual Kafka broker (LAN, VM, or cloud)
+
+      # --- CORS ---
+      CORS_ALLOWED_ORIGINS: "http://localhost:5173,https://your-ui.example.com"
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+
+volumes:
+  pgdata:
