@@ -56,3 +56,10 @@ ehthumbs.db
 .env
 .env.*
 *.local
+
+logs/
+dbdump/
+odocker/
+postman-collection/
+sql/
+
