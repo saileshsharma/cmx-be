@@ -13,11 +13,13 @@
           <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct/1.5.5.Final/mapstruct-1.5.5.Final.jar" />
         </processorPath>
         <module name="cmx-claims" />
+        <module name="cmx" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="cmx" options="-parameters" />
       <module name="cmx-claims" options="-parameters" />
     </option>
   </component>
