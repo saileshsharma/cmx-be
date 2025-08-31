@@ -3,6 +3,8 @@ package com.cb.th.claims.cmx.entity.policy;
 import com.cb.th.claims.cmx.entity.fnol.FNOL;
 import com.cb.th.claims.cmx.entity.insured.Insured;
 import com.cb.th.claims.cmx.entity.vehicle.Vehicle;
+import com.cb.th.claims.cmx.enums.policy.PaymentFrequency;
+import com.cb.th.claims.cmx.enums.policy.PaymentMethod;
 import com.cb.th.claims.cmx.enums.policy.PolicyStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -46,5 +48,29 @@ public class Policy {
     @OneToOne
     @JoinColumn(name = "vehicle_id")
     private Vehicle vehicle;
+
+
+
+    private LocalDate issueDate;
+
+    private LocalDate renewalDate;
+
+
+    private LocalDate cancelDate;
+
+
+    private LocalDate lapseDate;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "payment_frequency", length = 20)
+    private PaymentFrequency paymentFrequency;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "payment_method", length = 20)
+    private PaymentMethod paymentMethod;
+
+
+
+
 
 }

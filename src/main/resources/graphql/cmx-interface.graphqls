@@ -1,0 +1,32 @@
+"Every domain object with a stable identifier"
+interface Node {
+  id: ID!
+}
+
+"Adds auditing fields"
+interface Timestamps {
+  createdAt: String
+  updatedAt: String
+}
+
+"Anything with geocoordinates"
+interface GeoPoint {
+  latitude: Float
+  longitude: Float
+}
+
+"People-like things"
+interface Person implements Node & Timestamps {
+  id: ID!
+  firstName: String
+  lastName: String
+  email: String
+  phoneNumber: String
+  createdAt: String
+  updatedAt: String
+}
+
+"Anything that has a single mailing/location address"
+interface Addressable {
+  address: Address
+}

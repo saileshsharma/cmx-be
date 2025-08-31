@@ -1,0 +1,21 @@
+# src/main/resources/application-schema.yml
+spring:
+  main:
+    web-application-type: none        # optional: CLI-style run
+  jpa:
+    hibernate:
+      ddl-auto: none                  # don’t touch any live DB
+    properties:
+      # --- JPA 3.0 (Jakarta) schema generation to files ---
+      jakarta.persistence.schema-generation.create-source: metadata
+      jakarta.persistence.schema-generation.drop-source: metadata
+      jakarta.persistence.schema-generation.scripts.action: create
+      jakarta.persistence.schema-generation.scripts.create-target: target/schema-create.sql
+      jakarta.persistence.schema-generation.scripts.drop-target: target/schema-drop.sql
+
+      # Ensure Postgres SQL style even if no DB is connected
+      hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+
+# If your app normally requires a DataSource, either:
+#  - provide a dummy in-memory datasource here, or
+#  - make your beans conditional so the app can start without a DB for this profile.

@@ -1,4 +1,4 @@
-package com.cb.th.claims.cmx.config;
+package com.cb.th.claims.cmx.config.cors;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

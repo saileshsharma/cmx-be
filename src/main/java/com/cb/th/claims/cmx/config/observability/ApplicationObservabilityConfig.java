@@ -1,4 +1,4 @@
-package com.cb.th.claims.cmx.config;
+package com.cb.th.claims.cmx.config.observability;
 
 
 import io.micrometer.core.instrument.MeterRegistry;

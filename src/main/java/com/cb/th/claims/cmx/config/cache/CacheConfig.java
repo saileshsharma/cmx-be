@@ -1,4 +1,4 @@
-package com.cb.th.claims.cmx.config;
+package com.cb.th.claims.cmx.config.cache;
 
 import com.cb.th.claims.cmx.props.CacheProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

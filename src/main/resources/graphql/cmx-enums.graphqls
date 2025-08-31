@@ -1,0 +1,111 @@
+# ----------------
+# Enums
+# ----------------
+enum PolicyType {
+    PRIVATE
+    COMMERCIAL
+    MOTORCYCLE
+    OTHER
+    FLEET
+    EV
+}
+
+enum ClaimStatus {
+  REGISTERED
+  UNDER_REVIEW
+  APPROVAL_PENDING
+  APPROVED
+  WORK_IN_PROGRESS
+  REJECTED
+  PAID
+  CLOSED
+  REOPENED
+}
+
+enum PolicyStatus {
+  QUOTED
+  BIND
+  CANCELLED
+  PAYMENT_DUE
+  INVALID
+  IN_FORCE
+  EXPIRED
+  LAPSED
+}
+
+enum SurveyorStatus {
+  AVAILABLE
+  UNAVAILABLE
+  INACTIVE
+}
+
+enum SurveyorJobStatus {
+  Accepted
+  Working
+  Pending
+  Closed
+  On_The_Way
+}
+
+enum ClaimSeverity {
+  High
+  Medium
+  Low
+}
+
+enum LocationType {
+  ACCIDENT_SITE
+  INSURED_ADDRESS
+  GARAGE
+  BRANCH_OFFICE
+  OTHER
+}
+
+enum FNOLState {
+  DRAFT
+  SUBMITTED
+  ENRICHING
+  VALIDATED
+  REJECTED
+}
+
+enum PaymentMethod {
+    CREDIT_CARD
+    DEBIT_CARD
+    BANK_TRANSFER
+    CHEQUE
+    CASH
+    DIGITAL_WALLET
+    AUTO_DEBIT
+    OTHER
+}
+
+enum PaymentFrequency {
+    ANNUAL
+    SEMI_ANNUAL
+    QUARTERLY
+    MONTHLY
+    SINGLE
+    FLEXIBLE
+ }
+
+
+ enum ProducerStatus {
+     ACTIVE
+     INACTIVE
+     SUSPENDED
+     TERMINATED
+ }
+
+ enum ProducerType {
+     INDIVIDUAL
+     CORPORATE
+     BROKER
+     BANK_PARTNER
+     HEAD_SUB
+     MLM_AVP
+     MLM_VP
+     MLM_SVP
+     MLM_ED
+     IDP
+ }

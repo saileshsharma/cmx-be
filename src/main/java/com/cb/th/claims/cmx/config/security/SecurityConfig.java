@@ -1,4 +1,4 @@
-package com.cb.th.claims.cmx.config;
+package com.cb.th.claims.cmx.config.security;
 
 
 import org.springframework.beans.factory.annotation.Value;
