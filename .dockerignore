@@ -1,0 +1,14 @@
+# Maven
+target/
+.mvn/
+**/*.iml
+
+# IDE / OS
+.idea/
+.vscode/
+*.log
+.DS_Store
+
+# Git
+.git
+.gitignore
