@@ -10,21 +10,14 @@ type Query {
   getAllClaims: [Claim!]!
   getClaimById(id: ID!): Claim
   getClaimsByStatus(status: ClaimStatus!): [Claim!]!
-
-  getAllFnol: [FnolDetails!]!
+  getAllFnol: [
+  FnolDetails!]!
   getFnolById(id: ID!): FnolDetails
-
   getSurveyor(id: ID!): Surveyor
-
-
   getAllPolicies: [Policy!]!
-
   getPolicyById(id: ID!): Policy
   getPolicyByNumber(policyNumber: String!): Policy
-
-
   getPolicyByStatus(policyStatus: String!): [Policy!]!
-
   getAllSurveyors: [Surveyor!]!
   getSurveyorsById(id: ID!): [Surveyor!]!
   getSurveyorsByStatus(status: SurveyorStatus): [Surveyor!]!
@@ -39,7 +32,6 @@ type Mutation {
   updateClaimStatus(id: ID!, status: ClaimStatus!): Claim
   updateSurveyor(id: ID!, input: UpdateSurveyorInput!): Surveyor
   createAddress(input: CreateAddressInput!): Address
-
   updateFnol(
       id: ID!
       fnolState: FNOLState
@@ -87,9 +79,6 @@ input UpdateSurveyorInput {
   isActive: Boolean
 }
 
-
-
-
 # ----------------
 # Inputs
 # ----------------
@@ -106,76 +95,8 @@ input CreateAddressInput {
   locationType: LocationType
 }
 
-# ----------------
-# Enums
-# ----------------
-enum PolicyType {
-  PRIVATE_CAR
-  COMMERCIAL
-  MOTORCYCLE
-  OTHER
-  AUTO_PRIVATE
-  AUTO_COMMERCIAL
-}
 
-enum ClaimStatus {
-  REGISTERED
-  UNDER_REVIEW
-  APPROVAL_PENDING
-  APPROVED
-  WORK_IN_PROGRESS
-  REJECTED
-  PAID
-  CLOSED
-  REOPENED
-}
 
-enum PolicyStatus {
-  QUOTED
-  BIND
-  CANCELLED
-  PAYMENT_DUE
-  INVALID
-  IN_FORCE
-  EXPIRED
-  LAPSED
-}
-
-enum SurveyorStatus {
-  AVAILABLE
-  UNAVAILABLE
-  INACTIVE
-}
-
-enum SurveyorJobStatus {
-  Accepted
-  Working
-  Pending
-  Closed
-  On_The_Way
-}
-
-enum ClaimSeverity {
-  High
-  Medium
-  Low
-}
-
-enum LocationType {
-  ACCIDENT_SITE
-  INSURED_ADDRESS
-  GARAGE
-  BRANCH_OFFICE
-  OTHER
-}
-
-enum FNOLState {
-  DRAFT
-  SUBMITTED
-  ENRICHING
-  VALIDATED
-  REJECTED
-}
 
 # ----------------
 # Types
@@ -222,14 +143,8 @@ type Policy {
   id: ID!
   policyType: PolicyType!
   policyNumber: String!
-
-
   premium: Float
-
-
   sumInsured: Float
-
-
   coverageType: String
   policyStatus: PolicyStatus!
   lob: String
@@ -239,7 +154,6 @@ type Policy {
   vehicle: Vehicle
   claims: [Claim!]
   address: Address
-
 }
 
 type Vehicle {
@@ -289,7 +203,7 @@ type Insured {
   updatedAt: String
 }
 
-type Address {
+type Address implements Node & GeoPoint & Timestamps {
   id: ID!
   addressLine1: String
   addressLine2: String
@@ -299,9 +213,10 @@ type Address {
   country: String
   latitude: Float
   longitude: Float
-  googlePlaceId: String     # <-- was Float
+  googlePlaceId: String
   locationType: LocationType
   createdAt: String
+  updatedAt: String
 }
 
 
