@@ -1,6 +1,0 @@
-
-
-UPDATE fnol
-SET fState = (
-    ARRAY['DRAFT', 'SUBMITTED', 'ENRICHING', 'VALIDATED', 'REJECTED']
-)[FLOOR(RANDOM() * 5 + 1)];
