@@ -1,3 +1,4 @@
+
 schema {
   query: Query
   mutation: Mutation
@@ -10,8 +11,12 @@ type Query {
   getAllClaims: [Claim!]!
   getClaimById(id: ID!): Claim
   getClaimsByStatus(status: ClaimStatus!): [Claim!]!
-  getAllFnol: [
-  FnolDetails!]!
+
+  getClaimsByPolicyNumber(policyNumber: String!): [Claim!]!
+
+  # FIX: remove stray newline + bracket
+  getAllFnol: [FnolDetails!]!
+
   getFnolById(id: ID!): FnolDetails
   getSurveyor(id: ID!): Surveyor
   getAllPolicies: [Policy!]!
@@ -28,25 +33,30 @@ type Query {
 # Mutations
 # ----------------
 type Mutation {
-  updateAllClaimsStatus(status: ClaimStatus!): [Claim!]!
+
+    duplicateClaim(id: ID!): Claim!
+
+  updateClaim(id: ID!, input: UpdateClaimInput!): Claim
   updateClaimStatus(id: ID!, status: ClaimStatus!): Claim
+  updateAllClaimsStatus(status: ClaimStatus!): [Claim!]!
+
   updateSurveyor(id: ID!, input: UpdateSurveyorInput!): Surveyor
   createAddress(input: CreateAddressInput!): Address
   updateFnol(
-      id: ID!
-      fnolState: FNOLState
-      severity: ClaimSeverity
-      description: String
-    ): FnolDetails
+    id: ID!
+    fnolState: FNOLState
+    severity: ClaimSeverity
+    description: String
+  ): FnolDetails
 
   createFnol(
-      policyNumber: String!
-      registrationNumber: String!
-      accidentLocationId: ID!
-      description: String!
-      severity: ClaimSeverity!
-      policeReportNo: String
-      accidentDate: String!
+    policyNumber: String!
+    registrationNumber: String!
+    accidentLocationId: ID!
+    description: String!
+    severity: ClaimSeverity!
+    policeReportNo: String
+    accidentDate: String!
   ): CreateFnolPayload
 
   linkAttachmentsToFnol(fnolId: ID!, attachmentIds: [ID!]!): Boolean!
@@ -57,17 +67,28 @@ type Mutation {
 # ----------------
 type CreateFnolPayload {
   fnol: FnolDetails
-
 }
 
+# ----------------
+# Inputs
+# ----------------
+# RECOMMENDED: Do NOT include `id` here since you pass it as a top-level arg
+input UpdateClaimInput {
+  claimStatus: ClaimStatus
+  claimAmount: Float
+  incidentDate: String
+  claimDate: String
+  dateReported: String
+  claimSeverity: ClaimSeverity
+  location: String
+}
 
-# schema.graphqls
 input UpdateSurveyorInput {
   name: String
   email: String
   phoneNumber: String
-  rating_avg: Float       # snake_case to match your FE
-  app_version: String     # snake_case to match your FE
+  rating_avg: Float
+  app_version: String
   capacityPerDay: Int
   activeJobsCount: Int
   skills: String
@@ -79,9 +100,6 @@ input UpdateSurveyorInput {
   isActive: Boolean
 }
 
-# ----------------
-# Inputs
-# ----------------
 input CreateAddressInput {
   addressLine1: String
   addressLine2: String
@@ -95,9 +113,6 @@ input CreateAddressInput {
   locationType: LocationType
 }
 
-
-
-
 # ----------------
 # Types
 # ----------------
@@ -105,7 +120,6 @@ type Claim {
   id: ID!
   claimDate: String
   claimAmount: Float!
-
   claimStatus: ClaimStatus!
   status: ClaimStatus @deprecated(reason: "Use claimStatus")
   claimNumber: String!
@@ -219,7 +233,6 @@ type Address implements Node & GeoPoint & Timestamps {
   updatedAt: String
 }
 
-
 type Surveyor {
   id: ID!
   name: String
@@ -243,7 +256,6 @@ type Surveyor {
   surveyorJobStatus: SurveyorJobStatus
   fnol: FnolDetails
 }
-
 
 type Subscription {
   surveyorLocationUpdated: SurveyorLocationEvent!

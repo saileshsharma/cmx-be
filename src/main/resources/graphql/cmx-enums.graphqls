@@ -8,6 +8,8 @@ enum PolicyType {
     OTHER
     FLEET
     EV
+    AUTO_PRIVATE
+    AUTO_COMMERCIAL
 }
 
 enum ClaimStatus {
