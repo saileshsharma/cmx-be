@@ -39,5 +39,11 @@ public interface FNOLRepository extends JpaRepository<FNOL, Long> {
             """)
     boolean existsOpenForPolicyAndReg(Long policyId, String normalizedReg, FNOLState excludedState);
 
+
+    Optional<FNOL> findByFnolReferenceNo(String fnolReferenceNo);
+
+
+
+
 }
 

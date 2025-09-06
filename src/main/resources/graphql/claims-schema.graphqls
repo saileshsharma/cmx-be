@@ -11,12 +11,10 @@ type Query {
   getAllClaims: [Claim!]!
   getClaimById(id: ID!): Claim
   getClaimsByStatus(status: ClaimStatus!): [Claim!]!
-
   getClaimsByPolicyNumber(policyNumber: String!): [Claim!]!
 
   # FIX: remove stray newline + bracket
   getAllFnol: [FnolDetails!]!
-
   getFnolById(id: ID!): FnolDetails
   getSurveyor(id: ID!): Surveyor
   getAllPolicies: [Policy!]!
@@ -29,6 +27,35 @@ type Query {
   getSurveyorsByJobStatus(jobStatus: SurveyorJobStatus): [Surveyor!]!
 }
 
+
+
+
+extend type Query {
+  policyByLicensePlate(plate: String!): PolicyLookup      # best active match (null if none)
+  policiesByLicensePlate(plate: String!, includeInactive: Boolean = false): [PolicyLookup!]!
+}
+
+
+
+
+
+# schema.graphqls (additions)
+type PolicyLookup {
+  policyId: ID
+  vehicleId: ID
+  policyNumber: String!
+  policyStatus: String!
+  coverageType: String
+  startDate: String
+  endDate: String
+  insuredName: String
+  registrationNumber: String
+}
+
+
+
+
+
 # ----------------
 # Mutations
 # ----------------
@@ -36,7 +63,7 @@ type Mutation {
 
     duplicateClaim(id: ID!): Claim!
 
-  updateClaim(id: ID!, input: UpdateClaimInput!): Claim
+  updateClaim(id: ID!, input: UpdateClaimInput!): Claim!
   updateClaimStatus(id: ID!, status: ClaimStatus!): Claim
   updateAllClaimsStatus(status: ClaimStatus!): [Claim!]!
 

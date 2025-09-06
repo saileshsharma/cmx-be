@@ -102,9 +102,18 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
 
     // Normalize on the DB side (UPPER + strip '-' and spaces) so no schema change needed
     @Query("""
-        select v from Vehicle v
-        where upper(replace(replace(v.registrationNumber, '-', ''), ' ', '')) = :normalized
-    """)
+                select v from Vehicle v
+                where upper(replace(replace(v.registrationNumber, '-', ''), ' ', '')) = :normalized
+            """)
     Optional<Vehicle> findByRegistrationNormalized(String normalized);
+
+
+    @Query("""
+              select v from Vehicle v
+              where regexp_replace(lower(v.registrationNumber), '\\s|-', '', 'g')
+                    = regexp_replace(lower(:rawPlate), '\\s|-', '', 'g')
+            """)
+    Optional<Vehicle> findByLicensePlate(String rawPlate);
+
 
 }
