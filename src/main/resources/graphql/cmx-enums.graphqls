@@ -35,6 +35,17 @@ enum PolicyStatus {
   LAPSED
 }
 
+enum AssignmentStatus {
+  ASSIGNED
+  QUEUED
+  FAILED
+}
+
+enum AssignResultStatus {
+  SUCCESS
+  FAILED
+}
+
 enum SurveyorStatus {
   AVAILABLE
   UNAVAILABLE

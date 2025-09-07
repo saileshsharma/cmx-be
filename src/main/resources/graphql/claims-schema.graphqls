@@ -1,4 +1,3 @@
-
 schema {
   query: Query
   mutation: Mutation
@@ -27,19 +26,17 @@ type Query {
   getSurveyorsByJobStatus(jobStatus: SurveyorJobStatus): [Surveyor!]!
 }
 
-
-
-
 extend type Query {
-  policyByLicensePlate(plate: String!): PolicyLookup      # best active match (null if none)
+  policyByLicensePlate(plate: String!): PolicyLookup
   policiesByLicensePlate(plate: String!, includeInactive: Boolean = false): [PolicyLookup!]!
 }
 
 
 
 
-
-# schema.graphqls (additions)
+# ----------------
+# Lookup types
+# ----------------
 type PolicyLookup {
   policyId: ID
   vehicleId: ID
@@ -52,23 +49,19 @@ type PolicyLookup {
   registrationNumber: String
 }
 
-
-
-
-
 # ----------------
 # Mutations
 # ----------------
 type Mutation {
-
-    duplicateClaim(id: ID!): Claim!
-
+  duplicateClaim(id: ID!): Claim!
   updateClaim(id: ID!, input: UpdateClaimInput!): Claim!
   updateClaimStatus(id: ID!, status: ClaimStatus!): Claim
   updateAllClaimsStatus(status: ClaimStatus!): [Claim!]!
 
   updateSurveyor(id: ID!, input: UpdateSurveyorInput!): Surveyor
+
   createAddress(input: CreateAddressInput!): Address
+
   updateFnol(
     id: ID!
     fnolState: FNOLState
@@ -89,12 +82,28 @@ type Mutation {
   linkAttachmentsToFnol(fnolId: ID!, attachmentIds: [ID!]!): Boolean!
 }
 
+
+extend type Mutation {
+
+    assignSurveyorByRef(fnolReferenceNo: String!, surveyorId: ID!): AssignSurveyorPayload!
+    autoAssignSurveyorByRef(fnolReferenceNo: String!, take: Int): AssignSurveyorPayload!
+}
+
 # ----------------
 # Payloads
 # ----------------
 type CreateFnolPayload {
   fnol: FnolDetails
 }
+
+type AssignSurveyorPayload {
+  id: ID!
+  fnolReferenceNo: String!
+  status: AssignmentStatus!
+  message: String
+  assignedSurveyor: Surveyor
+}
+
 
 # ----------------
 # Inputs
@@ -171,6 +180,7 @@ type FnolDetails {
   severity: ClaimSeverity
   fnolState: FNOLState
   createdAt: String
+  assignedSurveyor: Surveyor
 
   surveyor: Surveyor
   policy: Policy
@@ -284,6 +294,9 @@ type Surveyor {
   fnol: FnolDetails
 }
 
+# ----------------
+# Subscriptions
+# ----------------
 type Subscription {
   surveyorLocationUpdated: SurveyorLocationEvent!
 }
@@ -300,6 +313,9 @@ type SurveyorLocationEvent {
   updatedAt: String
 }
 
+# ----------------
+# Additional queries
+# ----------------
 extend type Query {
   latestFnol(policyNumber: String!, registrationNumber: String!): FnolDetails
 }

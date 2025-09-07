@@ -4,9 +4,11 @@ Lightweight notice pushed when a Kafka fnol.created arrives.
 type FnolAssignmentNotice {
   fnolReferenceNo: String!
   status: String!
-  message: String!
-  timestamp: String!
+  message: String
+  timestamp: String
+  surveyor: Surveyor   # 👈 add this
 }
+
 
 extend type Subscription {
   fnolAssignmentNotice(fnolReferenceNo: String!): FnolAssignmentNotice!

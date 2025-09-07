@@ -1,7 +1,7 @@
 package com.cb.th.claims.cmx.service.surveyor;
 
-import com.cb.th.claims.cmx.service.surveyor.
-import com.cb.th.claims.cmx.repo.SurveyorRepository;
+import com.cb.th.claims.cmx.repository.surveyor.projection.SurveyorNearestRow;
+import com.cb.th.claims.cmx.repository.surveyor.SurveyorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;

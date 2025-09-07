@@ -1,6 +1,7 @@
 package com.cb.th.claims.cmx.resolver.fnol;
 
 import com.cb.th.claims.cmx.entity.fnol.FNOL;
+import com.cb.th.claims.cmx.entity.fnol.FnolDetail;
 import com.cb.th.claims.cmx.enums.claim.ClaimSeverity;
 import com.cb.th.claims.cmx.enums.fnol.FNOLState;
 import com.cb.th.claims.cmx.repository.fnol.FNOLRepository;
@@ -8,6 +9,7 @@ import com.cb.th.claims.cmx.repository.policy.PolicyRepository;
 import com.cb.th.claims.cmx.service.fnol.FnolService;
 import com.cb.th.claims.cmx.service.fnol.FnolService.CreateFnolCommand;
 import com.cb.th.claims.cmx.service.fnol.FnolService.CreateFnolPayload;
+import com.cb.th.claims.cmx.service.surveyor.SurveyorAssignmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
@@ -25,6 +27,7 @@ public class FnolGraphQLController {
     private final FnolService fnolService;       // business logic
 
     private final PolicyRepository policyRepository; // simple reads
+    private final SurveyorAssignmentService assignmentService;
 
 
     // ===== Queries =====
@@ -92,6 +95,9 @@ public class FnolGraphQLController {
         return fnolRepository.save(fnol);
     }
 
+
+
+
 /*    @QueryMapping
     @Transactional(readOnly = true)
     public FNOL latestFnol(@Argument String policyNumber, @Argument String registrationNumber) {
@@ -114,4 +120,5 @@ public class FnolGraphQLController {
         var last = fnolRepository.findLatestByPolicyAndReg(policy.getId(), reg);
         return last.orElse(null);
     }*/
+
 }

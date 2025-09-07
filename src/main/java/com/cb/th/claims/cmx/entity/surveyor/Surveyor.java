@@ -50,4 +50,5 @@ public class Surveyor {
     @JoinColumn(name = "fnol_id")
     private FNOL fnol;*/
 
+
 }

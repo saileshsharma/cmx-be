@@ -6,10 +6,7 @@ import com.cb.th.claims.cmx.entity.fnol.FNOL;
 import com.cb.th.claims.cmx.entity.policy.Policy;
 import com.cb.th.claims.cmx.entity.vehicle.Vehicle;
 import com.cb.th.claims.cmx.enums.claim.ClaimSeverity;
-import com.cb.th.claims.cmx.events.FnolCreated;
-import com.cb.th.claims.cmx.events.factory.FnolEventFactory;
 import com.cb.th.claims.cmx.exception.Exceptions;
-import com.cb.th.claims.cmx.kafka.FnolEventPublisher;
 import com.cb.th.claims.cmx.repository.address.AddressRepository;
 import com.cb.th.claims.cmx.repository.fnol.FNOLRepository;
 import com.cb.th.claims.cmx.repository.policy.PolicyRepository;
@@ -23,8 +20,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.TransactionSynchronization;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDate;
@@ -42,10 +37,10 @@ public class FnolService {
     private final AddressRepository addressRepository;
 
     private final FnolReferenceGenerator referenceGenerator;
-    private final FnolEventPublisher eventPublisher;
+
 
     private final FnolDomainValidator validator;
-    private final FnolEventFactory eventFactory;
+
 
     // ==== DTOs / Payloads ====
 
@@ -96,7 +91,7 @@ public class FnolService {
         final FNOL saved = fnolRepository.save(toSave);
 
         // Publish after commit (Kafka guarded by publisher/outbox)
-        publishAfterCommit(saved, policy, vehicle, address, accidentTs);
+        //publishAfterCommit(saved, policy, vehicle, address, accidentTs);
 
         return new CreateFnolPayload(saved, null);
     }
@@ -114,7 +109,7 @@ public class FnolService {
         return fnol;
     }
 
-    private void publishAfterCommit(FNOL fnol, Policy policy, Vehicle vehicle, Address address, LocalDateTime accidentTs) {
+/*    private void publishAfterCommit(FNOL fnol, Policy policy, Vehicle vehicle, Address address, LocalDateTime accidentTs) {
         final FnolCreated evt = eventFactory.create(fnol, policy, vehicle, address, accidentTs);
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
             @Override
@@ -122,5 +117,5 @@ public class FnolService {
                 eventPublisher.publishCreated(evt);
             }
         });
-    }
+    }*/
 }
