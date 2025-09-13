@@ -1,4 +1,3 @@
-
 package com.cb.th.claims.cmx.config.security;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -8,8 +7,11 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
+
+@EnableWebSecurity
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfig {
@@ -24,18 +26,13 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
 
                 // Allow cookie POSTs to /graphql etc. without CSRF blocking
-                .csrf(csrf -> csrf.ignoringRequestMatchers(
-                        "/graphql",
-                        "/graphiql/**",
-                        "/actuator/**"
-                ))
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/graphql", "/graphiql/**", "/actuator/**"))
 
                 .authorizeHttpRequests(auth -> {
                     // Public endpoints
                     auth
                             // GraphQL HTTP + WS handshake
-                            .requestMatchers(HttpMethod.POST, "/graphql").permitAll()
-                            .requestMatchers(HttpMethod.GET,  "/graphql").permitAll()
+                            .requestMatchers(HttpMethod.POST, "/graphql").permitAll().requestMatchers(HttpMethod.GET, "/graphql").permitAll()
                             // Dev tooling
                             .requestMatchers("/graphiql/**").permitAll()
                             // Monitoring
@@ -57,7 +54,8 @@ public class SecurityConfig {
             http.oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
         } else {
             // No auth flows in local/dev
-            http.httpBasic(b -> {}).formLogin(f -> f.disable());
+            http.httpBasic(b -> {
+            }).formLogin(f -> f.disable());
         }
 
         return http.build();
