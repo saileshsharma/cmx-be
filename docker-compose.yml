@@ -1,60 +1,64 @@
 version: "3.8"
 
 services:
-  db:
-    image: postgres:16
-    container_name: cmx-postgres
-    environment:
-      POSTGRES_DB: cmx
-      POSTGRES_USER: cmx_user
-      POSTGRES_PASSWORD: cmx_pass
-    ports:
-      - "5432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U cmx_user -d cmx"]
-      interval: 10s
-      timeout: 3s
-      retries: 10
-    restart: unless-stopped
-
   cmx-be:
-    build: .
-    image: cmx-be:latest
+    image: cmx-be:latest            # built by your CI/CD
     container_name: cmx-be
-    depends_on:
-      db:
-        condition: service_healthy
+    restart: unless-stopped
     environment:
       # --- Spring profile/port/timezone ---
-      SPRING_PROFILES_ACTIVE: "dev"     # <-- dev/open profile (no OAuth)
+      SPRING_PROFILES_ACTIVE: "prod"
       SERVER_PORT: "8080"
       TZ: "Asia/Singapore"
 
-      # --- Database ---
-      SPRING_DATASOURCE_URL: "jdbc:postgresql://db:5432/cmx"
-      SPRING_DATASOURCE_USERNAME: "cmx_user"
-      SPRING_DATASOURCE_PASSWORD: "cmx_pass"
+      # --- Database (managed DB; don't expose DB here) ---
+      SPRING_DATASOURCE_URL: "${SPRING_DATASOURCE_URL}"
+      SPRING_DATASOURCE_USERNAME: "${SPRING_DATASOURCE_USERNAME}"
+      SPRING_DATASOURCE_PASSWORD: "${SPRING_DATASOURCE_PASSWORD}"
 
-      # --- JPA (use validate or update for local dev) ---
+      # --- JPA (prod: schema managed by Flyway/Liquibase) ---
       SPRING_JPA_HIBERNATE_DDL_AUTO: "validate"
 
-      # --- Kafka (host broker on Docker Desktop) ---
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: "host.docker.internal:9092"
-      # If you don't have Kafka running, you can omit this or point to a mock.
+      # --- Kafka ---
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: "${KAFKA_BROKERS}"
 
-      # --- CORS (Spring GraphQL CORS) ---
-      SPRING_GRAPHQL_CORS_ALLOWED_ORIGINS: "http://localhost:5173,https://cmx-fe.onrender.com"
+      # --- CORS (Spring GraphQL) ---
+      SPRING_GRAPHQL_CORS_ALLOWED_ORIGINS: "${CORS_ALLOWED_ORIGINS}"
       SPRING_GRAPHQL_CORS_ALLOWED_METHODS: "GET,POST"
       SPRING_GRAPHQL_CORS_ALLOWED_HEADERS: "*"
       SPRING_GRAPHQL_CORS_ALLOW_CREDENTIALS: "true"
 
-      # --- Optional: OTEL ---
-      # OTEL_EXPORTER_OTLP_ENDPOINT: "http://host.docker.internal:4317"
+      # --- OpenTelemetry (optional) ---
+      # OTEL_EXPORTER_OTLP_ENDPOINT: "${OTEL_EXPORTER_OTLP_ENDPOINT}"
+
+      # --- OAuth2 Resource Server (ON only when provided) ---
+      # Prefer setting the resolved issuer directly (no placeholders):
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: "${OAUTH_ISSUER_URI}"
+
+      # If you truly want to pass KEYCLOAK_URL/REALM instead, ensure your
+      # application-prod.properties constructs issuer-uri from them. Otherwise prefer OAUTH_ISSUER_URI above.
+      # KEYCLOAK_URL: "${KEYCLOAK_URL}"
+      # KEYCLOAK_REALM: "${KEYCLOAK_REALM}"
+
+      # JVM opts (tune for your infra)
+      JAVA_OPTS: "-XX:+UseContainerSupport -XX:MaxRAMPercentage=75 -XX:InitialRAMPercentage=50 -XX:+ExitOnOutOfMemoryError"
+
     ports:
       - "8080:8080"
-    restart: unless-stopped
 
-volumes:
-  pgdata:
+    healthcheck:
+      # Requires Spring Actuator; change path if different
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health | grep -q '\"status\":\"UP\"'"]
+      interval: 30s
+      timeout: 5s
+      retries: 10
+
+    # Limit resources (example — adjust to your host)
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 2g
+        reservations:
+          cpus: "1.0"
+          memory: 1g
