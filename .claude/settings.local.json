@@ -13,7 +13,10 @@
       "Bash(export DB_NAME=cmx_new_db1)",
       "Bash(export DB_USER=producer_user)",
       "Bash(export DB_PASSWORD=PRODUCER_USER)",
-      "Bash(chmod:*)"
+      "Bash(chmod:*)",
+      "Bash(mkdir:*)",
+      "Bash(move start-dev.sh start-prod.sh stop-server.sh start-dev.bat start-prod.bat stop-server.bat scripts/)",
+      "Bash(mv:*)"
     ],
     "deny": [],
     "ask": []
